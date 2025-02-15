@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <!-- Book Form Section -->
+        <div class="col-md-4">
+            <h2>Add New Book</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success">Save Book</button>
+            </form>
+        </div>
+
+        <!-- Book List Section -->
+        <div class="col-md-8">
+            <h1>Books</h1>
+            <div class="books-list">
+                {% for book in books %}
+                    <div class="book-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h3>{{ book.title }}</h3>
+                                <p>Author: {{ book.author }}</p>
+                                <p>Published: {{ book.published_date }}</p>
+                                <p>{{ book.description|truncatewords:30 }}</p>
+                            </div>
+                            <form method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" name="delete" value="{{ book.id }}" 
+                                        class="btn btn-danger btn-sm"
+                                        onclick="return confirm('Are you sure you want to delete this book?')">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    <hr>
+                {% empty %}
+                    <p>No books available.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
