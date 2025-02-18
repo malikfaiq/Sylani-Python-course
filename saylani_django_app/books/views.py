@@ -29,6 +29,49 @@ class BookView(View):
         books = Book.objects.all()
         return render(request, self.template_name, {"books": books, "form": form})
 
+    def list_books(self, request):
+        books = Book.objects.all()
+        response = []
+        for book in books:
+            response.append(
+                {
+                    "id": book.id,
+                    "title": book.title,
+                    "author": book.author,
+                    "description": book.description,
+                    "published_date": book.published_date,
+                }
+            )
+        return response
+
+    def put(self, request):
+        book_id = request.POST.get("id")
+        book = get_object_or_404(Book, id=book_id)
+        form = self.get_form(request.POST, instance=book)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse("book-list"))
+
+        books = Book.objects.all()
+        return render(request, self.template_name, {"books": books, "form": form})
+
+    def delete(self, request):
+        book_id = request.POST.get("id")
+        book = get_object_or_404(Book, id=book_id)
+        book.delete()
+        return redirect(reverse("book-list"))
+
+    def patch(self, request):
+        book_id = request.POST.get("id")
+        book = get_object_or_404(Book, id=book_id)
+        form = self.get_form(request.POST, instance=book)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse("book-list"))
+
+        books = Book.objects.all()
+        return render(request, self.template_name, {"books": books, "form": form})
+
     def get_form(self, data=None):
         from django.forms import ModelForm
 
