@@ -34,3 +34,9 @@ class BookSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
         read_only_fields = ["created_at", "updated_at"]
+
+    # title should not contain numbers or special characters
+    def validate_title(self, value):
+        if any(char.isdigit() for char in value):
+            raise serializers.ValidationError("Title should not contain numbers")
+        return value
