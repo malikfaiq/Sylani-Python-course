@@ -9,7 +9,6 @@ class BookView(View):
 
     def get(self, request):
         books = Book.objects.all()
-        print(books)
         return render(
             request, self.template_name, {"books": books, "form": self.get_form()}
         )
